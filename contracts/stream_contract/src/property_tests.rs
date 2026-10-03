@@ -325,13 +325,13 @@ proptest! {
         let n = amounts.len().min(durations.len()).min(hybrid_flags.len());
         prop_assume!(n >= 1);
 
-        let total: i128 = amounts.iter().take(n as usize).sum();
+        let total: i128 = amounts.iter().take(n).sum();
         let headroom = total.saturating_mul(20).saturating_add(1_000_000_000);
         token::StellarAssetClient::new(&env, &t).mint(&sender, &headroom);
 
         // Create the streams up front. Hybrid streams pick a cliff and a lump
         // that always leave a non-empty, positive-rate linear tail.
-        for i in 0..n as usize {
+        for i in 0..n {
             let amount = amounts[i];
             let duration = durations[i];
             if hybrid_flags[i] {

@@ -1411,7 +1411,7 @@ impl StreamContract {
 
             // Each stream is committed to storage before its own token transfer
             // (CEI), so a malicious token cannot re-enter against stale state.
-            Self::apply_withdrawal(&env, &mut stream, stream_id, &recipient, claimable, now);
+            Self::apply_withdrawal(&env, &mut stream, stream_id, &recipient, claimable, now)?;
 
             let completed = stream.status == StreamStatus::Completed;
 
@@ -1694,7 +1694,6 @@ impl StreamContract {
         let start_time = env.ledger().timestamp();
 
         // Check allowance: just verify it's callable, don't lock it yet
-        let token_client = token::Client::new(&env, &token_address);
         // Try to get allowance to validate approval was made
         match env.try_invoke_contract::<i128, soroban_sdk::InvokeError>(
             &token_address,
@@ -1901,7 +1900,7 @@ impl StreamContract {
     /// Time complexity: O(1).
     fn collect_fee(
         env: &Env,
-        token_address: &Address,
+        _token_address: &Address,
         amount: i128,
     ) -> Result<(i128, i128, Option<Address>), StreamError> {
         match try_load_config(env) {
