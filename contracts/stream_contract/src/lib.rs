@@ -50,7 +50,7 @@ mod property_tests;
 mod test;
 
 use soroban_sdk::{
-    contract, contractimpl, token, vec, Address, BytesN, Env, IntoVal, InvokeError, Symbol, Vec,
+    contract, contractimpl, token, vec, Address, BytesN, Env, InvokeError, Symbol, Vec,
 };
 
 use errors::StreamError;
