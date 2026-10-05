@@ -4,7 +4,6 @@ use std::string::ToString;
 
 use super::*;
 use soroban_sdk::{
-    contract, contractimpl,
     testutils::{Address as _, Events, Ledger},
     token, vec, xdr, Address, Bytes, BytesN, Env, Symbol, TryFromVal, Val, Vec as SorobanVec,
 };
@@ -96,7 +95,6 @@ fn test_fee_transfer_observes_persisted_stream_on_create_and_top_up() {
     });
     assert_eq!(observed_top_up_deposit, 1_425);
 }
-
 // ─── Test Helpers ─────────────────────────────────────────────────────────────
 
 /// Registers a Stellar asset contract and returns (token_address, token_admin).
@@ -4593,6 +4591,7 @@ fn stream_record_is_current_shape(env: &Env, contract: &Address, stream_id: u64)
     // The current `Stream` shape carries 17 fields (including `cliff_time`,
     // `arbiter`, `dispute_status` and `is_allowance_based`); `LegacyStream` has
     // 12. Must stay in sync with `storage::STREAM_FIELD_COUNT` and `types::Stream`.
+    // `Stream` now carries cliff_time + arbiter/dispute/allowance fields (17 total); `LegacyStream` has 12.
     raw_stream_field_count(env, contract, stream_id) == 17
 }
 
