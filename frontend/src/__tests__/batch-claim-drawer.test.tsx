@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { BatchClaimDrawer } from "@/components/dashboard/BatchClaimDrawer";
+import type { Stream } from "@/lib/dashboard";
 
 vi.mock("@/context/wallet-context", () => ({ useWallet: () => ({ session: null }) }));
 vi.mock("@/lib/soroban", () => ({ batchWithdrawFromStreams: vi.fn() }));
@@ -11,7 +12,19 @@ function claimable(deposited: number, withdrawn: number, ratePerSecond: number, 
   return active ? Math.min(Math.max(0, deposited - withdrawn), elapsed * ratePerSecond) : 0;
 }
 
-const streams = [{ id: "1", isActive: true, status: "Active", lastUpdateTime: Date.now() / 1000 - 10, deposited: 10, withdrawn: 0, ratePerSecond: 1, token: "USDC", recipient: "GTEST" }] as any;
+const streams: Stream[] = [{
+  id: "1",
+  isActive: true,
+  status: "Active",
+  lastUpdateTime: Date.now() / 1000 - 10,
+  deposited: 10,
+  withdrawn: 0,
+  ratePerSecond: 1,
+  amount: 10,
+  token: "USDC",
+  recipient: "GTEST",
+  date: "2026-10-05",
+}];
 
 describe("batch claim drawer", () => {
   it("caps accrued balance at the deposited remainder", () => { expect(claimable(10, 4, 1, 20)).toBe(6); });
